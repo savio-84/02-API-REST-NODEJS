@@ -2,26 +2,16 @@ import fastify from 'fastify'
 import { knex } from './database'
 // import crypto from 'node:crypto'
 import { env } from './env'
+import { transactionsRoutes } from './routes/transactions'
+import cookie from '@fastify/cookie';
 
 const app = fastify()
 
-app.get('/hello', async () => {
-  // const transaction = await knex('transactions').insert({
-  //   id: crypto.randomUUID(),
-  //   title: 'Teste Transaction',
-  //   amount: 1000,
-  // }).returning('*');
+app.register(cookie);
 
-  // const transactions = await knex('transactions')
-  // .where('id', 'e32d388c-a48a-40a2-95bc-7a94f44bf84a')
-  // .orWhere('amount', 1000)
-  // .select('*')
-  
-  const transactions = await knex('transactions').select('*');
-
-
-  return transactions;
-})
+app.register(transactionsRoutes, {
+  prefix: 'transactions'
+});
 
 app
   .listen({
